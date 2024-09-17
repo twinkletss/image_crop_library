@@ -28,7 +28,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
     private static final String TAG = "BitmapCropTask";
 
     static {
-        System.loadLibrary("ucrop");
+        System.loadLibrary("image_crop_library");
     }
 
     private Bitmap mViewBitmap;
@@ -123,7 +123,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         return resizeScale;
     }
 
-    private boolean crop(float resizeScale) throws IOException {
+    private void crop(float resizeScale) throws IOException {
         ExifInterface originalExif = new ExifInterface(mImageInputPath);
 
         cropOffsetX = Math.round((mCropRect.left - mCurrentImageRect.left) / mCurrentScale);
@@ -144,10 +144,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                     ImageHeaderParser.copyExif(originalExif, mCroppedImageWidth, mCroppedImageHeight, mImageOutputPath);
                 }
             }
-            return cropped;
         } else {
             FileUtils.copyFile(mImageInputPath, mImageOutputPath);
-            return false;
         }
     }
 

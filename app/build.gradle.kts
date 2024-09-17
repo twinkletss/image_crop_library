@@ -1,18 +1,21 @@
+
 plugins {
-    alias(libs.plugins.android.library)
-    // publish library
-    id ("maven-publish")
+    alias(libs.plugins.android.application)
 }
 
 android {
-    namespace = "org.twinkle.image_crop_library"
+    namespace = "org.twinkle.imagecroplibraryinjava"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 23
+        applicationId = "org.twinkle.imagecroplibraryinjava"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        buildConfigField("int", "RequestMode", "1")
     }
 
     buildTypes {
@@ -22,40 +25,35 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("int", "RequestMode", "2")  // for release
+        }
+        debug {
+            buildConfigField ("int", "RequestMode", "1") // for debug
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    defaultConfig {
+        buildConfigField("int", "RequestModel", "1")
+    }
     buildFeatures {
         buildConfig = true
     }
+
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            // Ensure that the afterEvaluate block wraps the component selection
-            afterEvaluate {
-                from(components.findByName("release"))
-            }
-
-            // Set some other publishing details like groupId, artifactId, and version if needed
-            groupId = "org.twinkle.image_crop_library"
-            artifactId = "image_crop_library"
-            version = "1.0"
-        }
-    }
-}
 dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.exifinterface)
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
+    implementation(project(":image_crop_library"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation (libs.okhttp)
+    implementation (libs.okhttp.v31213)
 }
